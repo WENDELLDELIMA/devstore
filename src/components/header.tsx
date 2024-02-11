@@ -1,4 +1,5 @@
-import { Search } from "lucide-react";
+import { Search, ShoppingBag } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Header() {
@@ -19,7 +20,24 @@ export default function Header() {
           />
         </form>
       </div>
-      <div className="flex ite gap-4"></div>
+      <div className="flex ite gap-4">
+        <div className="flex items-center gap-2">
+          <ShoppingBag className="h-4 w-4" />
+          <span className="text-sm">Cart (0)</span>
+        </div>
+        <div className="w-px h-6 bg-zinc-700"></div>
+        <Link href={"/"} className="flex items-center gap-2 hover:underline">
+          {" "}
+          <span className="text-sm">Account</span>
+          <Image
+            alt="foto do ze ruela"
+            src="https://github.com/wendelldelima.png"
+            className="h-6 w-6 rounded-full"
+            width={24}
+            height={24}
+          />
+        </Link>
+      </div>
     </div>
   );
 }
