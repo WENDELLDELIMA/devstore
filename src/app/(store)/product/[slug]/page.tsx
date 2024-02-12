@@ -1,11 +1,40 @@
+import { api } from "@/data/api";
+import { Product } from "@/data/types/products";
 import Image from "next/image";
 
-export default function ProductPage() {
+interface ProductProps {
+  params: {
+    slug: string;
+  };
+}
+async function getProduct(slug: string): Promise<{ product: Product }> {
+  const response = await api(`/products/${slug}`);
+  const productData = await response.json();
+
+  // Se a resposta já contém uma propriedade 'product', retorne como está.
+  if ("product" in productData) {
+    console.log("Formato com propriedade product:", productData);
+    return productData;
+  }
+
+  // Se a resposta não contém uma propriedade 'product', envolva o produto retornado.
+  else {
+    console.log("Formato direto do produto, envolvendo:", {
+      product: productData,
+    });
+    return { product: productData };
+  }
+}
+
+export default async function ProductPage({ params }: ProductProps) {
+  const { product } = await getProduct(params.slug);
+
   return (
     <div className=" relative grid max-[860px] grid-cols-3">
       <div className="col-span-2 overflow-hidden">
+        {" "}
         <Image
-          src={"/moletom-java.png"}
+          src={product.image}
           alt="moleton java"
           width={1000}
           height={1000}
@@ -13,9 +42,9 @@ export default function ProductPage() {
         />
       </div>
       <div className="flex flex-col justify-center px-12">
-        <h1 className="text-3xl font-bold leading-tight">Moleton java</h1>
+        <h1 className="text-3xl font-bold leading-tight">{product.title}</h1>
         <p className="mt-2 leading-relaxed text-zinc-400">
-          Moleton a venda pq ninguem vive só de amor
+          {product.description}
         </p>
         <div className="mt-8 flex items-center gap-3">
           <span className="inline-block rounded-full bg-violet-500 px-5 py-2.5 font-semibold">
