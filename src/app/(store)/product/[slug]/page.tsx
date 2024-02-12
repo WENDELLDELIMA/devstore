@@ -1,5 +1,6 @@
 import { api } from "@/data/api";
 import { Product } from "@/data/types/products";
+import { Metadata } from "next";
 import Image from "next/image";
 
 interface ProductProps {
@@ -8,7 +9,11 @@ interface ProductProps {
   };
 }
 async function getProduct(slug: string): Promise<{ product: Product }> {
-  const response = await api(`/products/${slug}`);
+  const response = await api(`/products/${slug}`, {
+    next: {
+      revalidate: 60 * 60,
+    },
+  });
   const productData = await response.json();
 
   // Se a resposta já contém uma propriedade 'product', retorne como está.
@@ -25,7 +30,15 @@ async function getProduct(slug: string): Promise<{ product: Product }> {
     return { product: productData };
   }
 }
-
+export async function generateMetadata({
+  params,
+}: ProductProps): Promise<Metadata> {
+  const { product } = await getProduct(params.slug);
+  return {
+    title: product.title,
+    description: product.description,
+  };
+}
 export default async function ProductPage({ params }: ProductProps) {
   const { product } = await getProduct(params.slug);
 
@@ -48,10 +61,10 @@ export default async function ProductPage({ params }: ProductProps) {
         </p>
         <div className="mt-8 flex items-center gap-3">
           <span className="inline-block rounded-full bg-violet-500 px-5 py-2.5 font-semibold">
-            1290
+            {product.price}
           </span>
           <span className="text-sm text-zinc-400">
-            em 12x s/ juros de 10,75
+            em 12x s/ juros de {product.price / 12}
           </span>
         </div>
         <div className="mt-8 space-y-4">
