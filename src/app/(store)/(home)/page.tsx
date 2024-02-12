@@ -3,15 +3,14 @@ import { Product } from "@/data/types/products";
 import Image from "next/image";
 import Link from "next/link";
 async function getFeaturedProducts(): Promise<Product[]> {
-  const response = await api("/products/featured", {
-    next: { revalidate: 60 * 60 }, //revalida a requisicao a cada 1 hora, sendo assim nao consome do backend
-  });
+  await new Promise((resolve) => setTimeout(resolve, 3000));
+  const response = await api("/products/featured");
   const products = await response.json();
   return products;
 }
 export default async function Home() {
   const [firstProduct, ...otherProducts] = await getFeaturedProducts();
-
+  console.log(firstProduct);
   return (
     <div className="grid max-h-[860px] grid-cols-9 grid-rows-6 gap-6">
       <Link
