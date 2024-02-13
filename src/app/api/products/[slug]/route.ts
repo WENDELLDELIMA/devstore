@@ -7,5 +7,5 @@ export async function GET(
 ) {
   const slug = z.string().parse(params.slug);
   const product = data.products.find((product) => product.slug === slug);
-  return Response.json({ product });
+  return Response.json(product);
 }
