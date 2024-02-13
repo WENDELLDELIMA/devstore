@@ -19,6 +19,7 @@ async function searchProducts(query: string): Promise<Product[]> {
   return products;
 }
 export default async function Search({ searchParams }: SearchProps) {
+  await new Promise((resolve) => setTimeout(resolve, 1500));
   const { q: query } = searchParams;
   if (!query) {
     redirect("/");
@@ -30,7 +31,7 @@ export default async function Search({ searchParams }: SearchProps) {
         Resultados para: <span className="font-semibold">{query}</span>
       </p>
 
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-4 gap-6">
         {products.map((products) => {
           return (
             <Link
