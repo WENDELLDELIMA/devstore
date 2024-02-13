@@ -14,9 +14,7 @@ export function SearchForm() {
     const formData = new FormData(event.currentTarget);
     const data = Object.fromEntries(formData);
     const query = data.q;
-    if (!query) {
-      return null;
-    }
+
     router.push(`/search?q=${query}`);
   }
   return (
@@ -28,7 +26,7 @@ export function SearchForm() {
       <Search className="w-5 h-5 text-zinc-500" />
       <input
         name="q"
-        defaultValue={query ?? ''}
+        defaultValue={query ?? ""}
         placeholder="Buscar Produtos"
         className="flex-1 bg-transparent text-sm outline-none"
       />

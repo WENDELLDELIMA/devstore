@@ -3,6 +3,7 @@ import { Product } from "@/data/types/products";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+
 interface SearchProps {
   searchParams: {
     q: string;
@@ -11,24 +12,25 @@ interface SearchProps {
 
 async function searchProducts(query: string): Promise<Product[]> {
   const response = await api(`/products/search?q=${query}`, {
-    next: {
-      revalidate: 60 * 60,
-    },
+    cache: "no-cache",
   });
+  console.log(response);
   const products = await response.json();
+
   return products;
 }
 export default async function Search({ searchParams }: SearchProps) {
   await new Promise((resolve) => setTimeout(resolve, 1500));
   const { q: query } = searchParams;
-  if (!query) {
-    redirect("/");
-  }
+  console.log(query);
   const products = await searchProducts(query);
   return (
     <div className="flex flex-col gap-4">
       <p className="text-sm">
-        Resultados para: <span className="font-semibold">{query}</span>
+        Resultados para:{" "}
+        <span className="font-semibold">
+          {query ? query : "O que for encontrado"}
+        </span>
       </p>
 
       <div className="grid grid-cols-4 gap-6">
